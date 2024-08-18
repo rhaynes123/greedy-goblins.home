@@ -131,14 +131,23 @@
     </div>
 </div>
   </section>
-  
+
   
 <div class="container">
 	<div class="row">
       <div class="col-md-6 col-md-offset-3">
         <div class="well well-sm">
+        
+        
+        
         <!-- Begin Form -->
           <form id ="notificationForm" class="form-horizontal">
+          <div id="emailSent" hidden>
+            <strong>Email Sent!</strong>&#9989;
+        </div>
+        <div id="emailFailed" hidden>
+            <strong>Email Failed!</strong>&#10060;
+        </div>
           <fieldset>
             <legend class="text-center">Contact us</legend>
     
@@ -152,7 +161,7 @@
             <!-- Email input-->
             <div class="form-group">
               <div class="col-md-9">
-                <input id="fromEmail" name="email" type="text" placeholder="Your email" class="form-control" type="email" required>
+                <input id="fromEmail" name="email" type="email" placeholder="Your email" class="form-control" required>
               </div>
             </div>
             
@@ -166,14 +175,15 @@
             <!-- Message body -->
             <div class="form-group">
               <div class="col-md-9">
-                <textarea class="form-control" id="messageId" name="message" placeholder="Please enter your message here..." rows="5" required></textarea>
+                <textarea class="form-control" id="messageId" name="message" placeholder="Please enter your message here..." rows="5" required>
+                </textarea>
               </div>
             </div>
     
             <!-- Form actions -->
             <div class="form-group">
               <div class="col-md-12 text-right">
-                <button id="notificationButtonId" type="submit" class="btn btn-primary btn-lg">Submit</button>
+                <button id="notificationButtonId" type="submit" class="btn btn-primary btn-lg" disabled>Submit</button>
               </div>
             </div>
           </fieldset>

@@ -4,40 +4,61 @@ function htmlEncode(input) {
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
 }
-
-function ValidNotification(notification){
-    if(notification.name === ""){
-        document.getElementById('name').focus();
-        return false;
-    }
-    if(notification.message === ""){
-        document.getElementById('messageId').focus();
-        return false;
-    }
-    const emailRegex = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
-    if(notification.from === "" || !emailRegex.test(notification.from) ){
-        document.getElementById('fromEmail').focus();
-        return false;
-    }
-    return true;
+function clearFormGroupFields() {
+  // Select all elements with class 'form-group'
+  const formGroups = document.querySelectorAll('.form-group');
+  
+  // Iterate through each form-group
+  formGroups.forEach(group => {
+    // Find input elements within the form-group
+    const inputs = group.querySelectorAll('input[type="text"], input[type="email"], textarea');
+    
+    // Clear the value of each input
+    inputs.forEach(input => {
+      input.value = '';
+    });
+  });
+  document.getElementById('notificationButtonId').setAttribute("disabled", true);
 }
 
+
+
 async function postNotification(notification) {
+    document.getElementById('emailFailed').setAttribute("hidden", true);
+    document.getElementById('emailSent').setAttribute("hidden", true);
     
     let serviceId = 'service_nvfsdog';
     let templateId = 'template_deslb6d';
-    /
+    
     let responseData = await emailjs.send(serviceId,templateId, notification);
     if(responseData.status !== 200) {
         console.log(responseData.status);
-        alert('Something Went wrong');
+        document.getElementById('emailFailed').removeAttribute("hidden");
         return
     }
-    *
-    alert('Email Sent Thank You');
+    
+    document.getElementById('emailSent').removeAttribute("hidden");
+    clearFormGroupFields();
 }
-let notificationButtonId = document.getElementById('notificationButtonId');
 
+let formDocument = document.getElementById('notificationForm');
+if(formDocument){
+    formDocument.addEventListener('keyup', function(event) {
+        var isValid = () => {
+            const emailRegex = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
+            let email = document.getElementById('fromEmail').value
+            return document.getElementById('name').value !== ""
+                && email !== ""
+                && document.getElementById('messageId').value !== ""
+                && emailRegex.test(email);
+        }
+        if(isValid) {
+            document.getElementById('notificationButtonId').removeAttribute("disabled");
+        }
+    });
+}
+
+let notificationButtonId = document.getElementById('notificationButtonId');
 if(notificationButtonId){
     notificationButtonId.addEventListener('click',function(event){
         
@@ -52,10 +73,9 @@ if(notificationButtonId){
             message: htmlEncode(message),
             subject: htmlEncode(subject)
         }
-        if(!ValidNotification(notification)){
-            return;
-        }
+       
         postNotification(notification)
+        
     });
 }
 
